@@ -31,6 +31,7 @@ function App(){
  const finishIntro=()=>{localStorage.setItem('cts-briefed','1');setIntro(false)};
  const goTab=(i)=>{setTab(i);setScreen('home');setProfile(false);setResult(null)};
  const checkCode=()=>{if(code.length!==4)return;if(attempts<=0){setNotice(t.noAttempts);return}setAttempts(v=>v-1);setChecks(v=>v+1);setCode('');setResult('wrong');setScreen('result');if(vibration&&navigator.vibrate)navigator.vibrate([35,20,35]);};
+ useEffect(()=>{if(screen==='crack'&&code.length===4){const id=setTimeout(()=>checkCode(),260);return()=>clearTimeout(id)}},[code,screen]);
  const claimMission=(m)=>{if(claimed.includes(m.id))return;setClaimed(v=>[...v,m.id]);setAttempts(v=>v+m.reward);setEarned(v=>v+m.reward);setWalletHistory(v=>[{label:{ru:'Награда: '+m.title.ru,en:'Reward: '+m.title.en},amount:'+'+m.reward,type:'plus'},...v]);setNotice(t.claimed)};
  const addDemo=(n)=>{setAttempts(v=>v+n);setWalletHistory(v=>[{label:{ru:'Демо-пакет попыток',en:'Demo attempt pack'},amount:'+'+n,type:'plus'},...v]);setNotice(lang==='ru'?'Демо-попытки начислены':'Demo attempts added')};
  const copyInvite=async()=>{const url=window.location.origin+'/?startapp=demo-ref';try{await navigator.clipboard.writeText(url);setNotice(t.copied)}catch{setNotice(url)}};
